@@ -95,7 +95,9 @@ generate-active-tasks {γ} {σ} {Γ} Σ all = generate-active-tasks' [] all
         ... | suc n = (Σ ▹ ⟨ s , Π ∷ x₂ ⟩ , (ts ++ ts₂)) ∷ generate-active-tasks' (⟨ e , s , Π ∷ x₂ ⟩ ∷ ts) ts₂
         generate-active-tasks' ts (⟨ Π ⟩ ∷ ts₂) = generate-active-tasks' (⟨ Π ⟩ ∷ ts) ts₂
 
--- Finally, 
+-- Finally, the main relation: starting from a configuration, when we take a step, there may be a number
+-- of different configurations we end up with, depending on what the scheduler does. Here we just generate
+-- all the possibilities and let someone else make the decision which path to take.
 data _⟶_ {γ σ}{Γ : FCtx γ} : Cfg Γ σ → List (Cfg Γ σ) → Set where
   same-task : ∀{Σ Σ' : Vec ℕ σ}{n v₁ v₂}{V₁ : VarCtx v₁}{V₂ : VarCtx v₂}{Π : Stack (n ∷ V₁)}{s : Stmt' Γ σ (n ∷ V₁) V₂}{ts : List (Task Γ σ false)}{t : Task Γ σ true}{Θ} → 
     Σ ▹ t ⟶t Σ' ▹ true ,, ⟨ s , Π ⟩ ∥ Θ → 
